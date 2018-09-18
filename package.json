@@ -1,0 +1,23 @@
+{
+  "name": "photoshelter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node utility.js 3",
+    "test": "mocha --timeout 50000 test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-match": "^1.1.1",
+    "chai-sorted": "^0.2.0",
+    "express": "^4.16.3",
+    "mocha": "^5.2.0"
+  },
+  "devDependencies": {
+    "chromedriver": "^2.41.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  }
+}
