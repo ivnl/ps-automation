@@ -36,4 +36,14 @@ module.exports = class Page {
       return Promise.all(promiseArray).then(result => result);
     });
   }
+
+  static async waitForInfiniteScroll(driver) {
+    return await driver.wait(() => {
+      return driver
+        .findElements(By.className("jscroll-loading"))
+        .then(function(el) {
+          return el.length === 0;
+        });
+    });
+  }
 };

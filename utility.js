@@ -1,6 +1,8 @@
 require("chromedriver");
 const { Builder, By, until } = require("selenium-webdriver");
 
+const pageModel = require("./pageModel.js");
+
 if (!process.argv[2]) {
   console.log(
     "\nPlease run the script supplying exactly one integer argument IE: 'node utility.js 3'"
@@ -19,13 +21,7 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
   let driver = await new Builder().forBrowser("chrome").build();
   try {
     await driver.get("http://the-internet.herokuapp.com/infinite_scroll");
-    await driver.wait(() => {
-      return driver
-        .findElements(By.className("jscroll-loading"))
-        .then(function(el) {
-          return el.length === 0;
-        });
-    });
+    await pageModel.waitForInfiniteScroll(driver);
 
     let scrollCount = 0;
 
@@ -34,16 +30,8 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
         "window.scrollTo(0, document.body.scrollHeight)"
       );
 
-      //TODO: refactor repeated code here, used for waiting for an element to dissapear
-      await driver.wait(() => {
-        return driver
-          .findElements(By.className("jscroll-loading"))
-          .then(function(el) {
-            if (el.length === 0) {
-              scrollCount++;
-            }
-            return el.length === 0;
-          });
+      await pageModel.waitForInfiniteScroll(driver).then(result => {
+        if (result) scrollCount++;
       });
     }
   } catch (e) {
@@ -57,7 +45,7 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
  * checkBox helper function for clicking and randomization
  * @param {Object} box, the input webelement that is passed in for clicking
  */
-const clicker = function clicker(box) {
+const boxClicker = function boxClicker(box) {
   const randomNumber = Math.floor(Math.random() * 10) + 1;
 
   for (let i = 0; i < randomNumber; i++) {
@@ -85,8 +73,8 @@ const checkBoxes = async function checkBoxes() {
       By.xpath("//*[@id='checkboxes']/input[2]")
     );
 
-    clicker(checkBoxOne);
-    clicker(checkBoxTwo);
+    boxClicker(checkBoxOne);
+    boxClicker(checkBoxTwo);
   } catch (e) {
     console.log(e);
   } finally {
@@ -125,7 +113,7 @@ const dropDown = async function dropDown() {
 Promise.all([infiniteScroll(scrollInput), checkBoxes(), dropDown()]).then(
   drivers => {
     drivers.forEach(driver => {
-      driver.quit();
+      driver.close();
     });
   }
 );
