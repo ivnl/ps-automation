@@ -49,7 +49,7 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
   } catch (e) {
     console.log(e);
   } finally {
-    return driver;
+    return await driver;
   }
 };
 
@@ -90,7 +90,7 @@ const checkBoxes = async function checkBoxes() {
   } catch (e) {
     console.log(e);
   } finally {
-    return driver;
+    return await driver;
   }
 };
 
@@ -118,13 +118,14 @@ const dropDown = async function dropDown() {
   } catch (e) {
     console.log(e);
   } finally {
-    return driver;
+    return await driver;
   }
 };
 
 Promise.all([infiniteScroll(scrollInput), checkBoxes(), dropDown()]).then(
-  drivers =>
+  drivers => {
     drivers.forEach(driver => {
       driver.quit();
-    })
+    });
+  }
 );
