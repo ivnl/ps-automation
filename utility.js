@@ -10,15 +10,15 @@ if (!process.argv[2]) {
   return;
 }
 
-let scrollInput = parseInt(process.argv[2]);
+const scrollInput = parseInt(process.argv[2]);
 
 /**
  * Test infinite scroll using webdriver, variable number of page scrolls.
  * @param {number} scrollInput The desired number of scrolls to attempt, given at CLI run time
- * @returns {Object} driver, for clean up/exit purposes when all such tests are completed
  */
 const infiniteScroll = async function infiniteScroll(scrollInput) {
-  let driver = await new Builder().forBrowser("chrome").build();
+  const driver = await new Builder().forBrowser("chrome").build();
+
   try {
     await driver.get("http://the-internet.herokuapp.com/infinite_scroll");
     await pageModel.waitForInfiniteScroll(driver);
@@ -37,7 +37,7 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
   } catch (e) {
     console.log(e);
   } finally {
-    return await driver;
+    await driver.close().then(console.log("infinite scroll test complete"));
   }
 };
 
@@ -45,26 +45,25 @@ const infiniteScroll = async function infiniteScroll(scrollInput) {
  * checkBox helper function for clicking and randomization
  * @param {Object} box, the input webelement that is passed in for clicking
  */
-const boxClicker = function boxClicker(box) {
+const boxClicker = async function boxClicker(box) {
   const randomNumber = Math.floor(Math.random() * 10) + 1;
-
   for (let i = 0; i < randomNumber; i++) {
-    box.click();
+    await box.click();
   }
 };
 
 /**
  * Test checkBox selection, checks each box a random amount of times between 1-10.
- * @returns {Object} driver, for clean up/exit purposes when all such tests are completed
  */
 const checkBoxes = async function checkBoxes() {
-  let driver = await new Builder().forBrowser("chrome").build();
+  const driver = await new Builder().forBrowser("chrome").build();
   try {
     await driver.get("http://the-internet.herokuapp.com/checkboxes");
     await driver.wait(
       until.elementIsVisible(driver.findElement(By.id("checkboxes")))
     );
 
+    // todo: extract elements to pom?
     const checkBoxOne = await driver.findElement(
       By.xpath("//*[@id='checkboxes']/input[1]")
     );
@@ -73,27 +72,27 @@ const checkBoxes = async function checkBoxes() {
       By.xpath("//*[@id='checkboxes']/input[2]")
     );
 
-    boxClicker(checkBoxOne);
-    boxClicker(checkBoxTwo);
+    await boxClicker(checkBoxOne);
+    await boxClicker(checkBoxTwo);
   } catch (e) {
     console.log(e);
   } finally {
-    return await driver;
+    await driver.close().then(console.log("checkbox test complete"));
   }
 };
 
 /**
  * Test dropdown selection, selects a random available option.
- * @returns {Object} driver, for clean up/exit purposes when all such tests are completed
  */
 const dropDown = async function dropDown() {
-  let driver = await new Builder().forBrowser("chrome").build();
+  const driver = await new Builder().forBrowser("chrome").build();
   try {
     await driver.get("http://the-internet.herokuapp.com/dropdown");
     await driver.wait(
       until.elementIsVisible(driver.findElement(By.id("dropdown")))
     );
 
+    // todo: extract elements to pom?
     let options = await driver
       .findElements(
         By.xpath("//*[@id='dropdown']/option[not(@disabled='disabled')]")
@@ -106,14 +105,11 @@ const dropDown = async function dropDown() {
   } catch (e) {
     console.log(e);
   } finally {
-    return await driver;
+    await driver.close().then(console.log("dropdown test complete"));
   }
 };
 
-Promise.all([infiniteScroll(scrollInput), checkBoxes(), dropDown()]).then(
-  drivers => {
-    drivers.forEach(driver => {
-      driver.close();
-    });
-  }
-);
+// todo: create better test run, maybe interactivity at CLI level
+infiniteScroll(scrollInput);
+checkBoxes();
+dropDown();

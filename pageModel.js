@@ -27,7 +27,7 @@ module.exports = class Page {
 
   static async getTableElements(driver, path) {
     return await driver.findElements(By.xpath(path)).then(elements => {
-      let promiseArray = [];
+      const promiseArray = [];
 
       elements.forEach(el => {
         promiseArray.push(el.getText());
