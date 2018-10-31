@@ -9,11 +9,8 @@ For __tasks 3,4,5__: run with __'npm start'__ in CLI, or alternatively
 
 ___
 
-Task 1: Test form authentication (user login)
-Task 2: Test a sortable table
-Task 3: Test an infinite scrolling page
-Task 4: Test input box interaction
-Task 5: Test drop-down menu interaction
-___
-
-Thank you PS team!
+- Task 1: Test form authentication (user login)
+- Task 2: Test a sortable table
+- Task 3: Test an infinite scrolling page
+- Task 4: Test input box interaction
+- Task 5: Test drop-down menu interaction
