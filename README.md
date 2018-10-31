@@ -1,5 +1,8 @@
-### Simple selenium-webdriver + chromedriver exercises in JS
+## Simple selenium-webdriver + chromedriver exercises in JS
 
+
+
+#### Instructions:
 Please run 'npm install' before proceeding as usual and make sure to have __Google Chrome__ installed.
 
 For __tasks 1 & 2__: run with __'npm test'__ in CLI
